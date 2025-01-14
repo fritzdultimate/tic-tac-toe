@@ -158,7 +158,14 @@ function Game() {
         }
         return (
             <li key={move}>
-                <button onClick={() => jumpTo(move)}>{description}</button>
+                { 
+                    currentMove && currentMove == move ? 
+                    <span className="on-move">You are at move # {move}</span>
+                    :
+                    <button className="btn" onClick={() => jumpTo(move)}>
+                        { description }
+                    </button>
+                }
             </li>
         );
       });

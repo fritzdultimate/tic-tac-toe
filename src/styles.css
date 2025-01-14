@@ -88,4 +88,25 @@
   .game-info {
     margin-left: 20px;
   }
+
+  .on-move {
+    font-size: 12px;
+    font-weight: 600;
+    color:rgb(78, 69, 69)
+  }
+
+  .btn {
+    padding: 3px 10px;
+    outline: none;
+    border: 0;
+    color: rgb(84, 84, 214);
+    border-radius: 5px;
+    font-weight: 700;
+  }
+
+  .btn:hover {
+    background-color: rgb(84, 84, 214);
+    color: rgb(229, 229, 247);
+    cursor: pointer;
+  }
   
