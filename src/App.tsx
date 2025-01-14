@@ -10,17 +10,53 @@ const Square: React.FC<SquareProps> = ({ value, onSquareClick }) => {
 }
 
 function Board() {
-    const [xIsNext, setXIsNext] = useState<boolean>(true);
-    const [squares, setSquares] = useState<(string | null)[]>(Array(9).fill(null))
-    function handleClick (i: number): void {
-        const nextSquares = [...squares];
-        nextSquares[i] = xIsNext ? 'X' : 'O';
-        setXIsNext(!xIsNext);
-        setSquares(nextSquares);
+    const [xIsPlaying, setXIsPlaying] = useState<boolean>(true);
+    const [squares, setSquares] = useState<(string | null)[]>(Array(9).fill(null));
 
+    function handleClick (i: number): void {
+        const winner = calculateWinner(squares);
+        if(squares[i] || winner) {
+            return;
+        }
+        const nextSquares = [...squares];
+        nextSquares[i] = xIsPlaying ? 'X' : 'O';
+        setSquares(nextSquares);
+        setXIsPlaying(!xIsPlaying);            
     }
+
+    let status;
+    const winner = calculateWinner(squares);
+    if(winner) {
+        status = 'Winner: ' + winner;
+    } else {
+        status = `Next Player: ${xIsPlaying ? 'X' : 'O'}`;
+    }
+
+    function calculateWinner(squares: (string | null)[]): string | null {
+        const lines = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+
+  
+        for(let i = 0; i < lines.length; i++) {
+            const [a,b,c] = lines[i];
+            if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                return squares[a];
+            }
+        }
+        return null;
+    }
+
   return (
     <>
+        <p className="status">{status}</p>
         <div className="board-row">
             <Square onSquareClick={() => {handleClick(0)}} value={squares[0]} />
             <Square onSquareClick={() => {handleClick(1)}} value={squares[1]} />
