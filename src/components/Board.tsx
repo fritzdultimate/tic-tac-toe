@@ -1,11 +1,20 @@
+import { useEffect } from "react";
 import Square from "./Square";
 
 interface BoardProps {
     squares: (string | null)[];
-    onPlay: (data: (string | null)[]) => void,
-    xIsPlaying: boolean
+    onPlay: (data: (string | null)[]) => void;
+    xIsPlaying: boolean;
 }
 function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
+
+    useEffect(() => {
+        if(!xIsPlaying) {
+            const nextSquares = [...squares];
+            let position = handleComputerPlay(nextSquares);
+            handleClick(position);
+        }
+    }, [xIsPlaying]);
 
     function handleClick(i: number): void {
         const winner = calculateWinner(squares);
@@ -13,8 +22,16 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
             return;
         }
         const nextSquares = [...squares];
-        nextSquares[i] = xIsPlaying ? "X" : "O";
+        nextSquares[i] = xIsPlaying ? "X" : 'O';
         onPlay(nextSquares);
+    }
+
+    function handleComputerPlay(nextSquares: (string | null)[]): number{
+        const emptyCells = nextSquares.map((cell, i) => cell === null ? i : null);
+        const emptyCellsPositions = emptyCells.filter(cell => cell !== null);
+        const randomPosition = Math.abs(Math.round(Math.random() * emptyCellsPositions.length) -1);
+        console.log(emptyCellsPositions[randomPosition]);
+        return emptyCellsPositions[randomPosition];
     }
 
     let status: string;
