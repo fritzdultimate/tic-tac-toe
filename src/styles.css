@@ -69,6 +69,7 @@
     padding: 0;
     text-align: center;
     width: 34px;
+    color: rgb(84, 84, 214);
   }
   
   .board-row:after {
@@ -108,5 +109,10 @@
     background-color: rgb(84, 84, 214);
     color: rgb(229, 229, 247);
     cursor: pointer;
+  }
+
+  .highlight-winning-box {
+    background-color: rgb(84, 84, 214);
+    color: rgb(229, 229, 247);
   }
   
