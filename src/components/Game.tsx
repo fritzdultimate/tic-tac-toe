@@ -45,7 +45,7 @@ function Game() {
     });
 
     return (
-        <div className="flex flex-col justify-center items-center h-full px-10 border border-teal-400">
+        <div className="flex flex-col justify-center items-center h-full px-10 border border-teal-300 border-opacity-55">
             <div className="mb-10 text-sm font-semibold text-slate-800 opacity-55 shadow px-4 py-1">
                 { xIsPlaying ? 'Your turn' : 'AI turn'}
             </div>
