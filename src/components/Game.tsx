@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Board from "./Board";
+import Statistics from "./Statistics";
 
 function Game() {
     const [history, setHistory] = useState<(string | null)[][]>(
@@ -40,11 +41,28 @@ function Game() {
     });
 
     return (
-        <div className="game">
-            <div className="game-board">
+        <div className="flex flex-col justify-center items-center h-full px-10">
+            <Statistics />
+            <div className="w-full mt-5">
                 <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
             </div>
-            <div className="game-info bg-red-200">
+
+
+            <div className="grid grid-cols-3 border-collapse mt-8 w-full px-12 hidden">
+                <div className="border-r border-b border-r-red-500">cell 1</div>
+                <div className="border-r border-b">cell 2</div>
+
+                <div className="border-b">cell 3</div>
+                <div className="border-r border-b">cell 4</div>
+                <div className="border-r border-b">cell 5</div>
+
+                <div className="border-b">cell 6</div>
+                <div className="border-r">cell 7</div>
+                <div className="border-r">cell 8</div>
+
+                <div>cell 9</div>
+            </div>
+            <div className="game-info hidden">
                 <ol>{moves}</ol>
             </div>
         </div>

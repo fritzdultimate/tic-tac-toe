@@ -230,12 +230,12 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
     }
 
-    const cols = Array(3).fill(null);
-    const rows = Array(3).fill(null);
+    const cells = Array(9).fill(null);
     return (
         <>
-            <p className="status">{status}</p>
-            <Playground columns={cols} rows={rows} squares={squares} calculateWinner={calculateWinner} handleClick={handleClick} />
+            <div className="w-full">
+                <Playground cells={cells} squares={squares} calculateWinner={calculateWinner} handleClick={handleClick} />
+            </div>
         </>
     );
 }

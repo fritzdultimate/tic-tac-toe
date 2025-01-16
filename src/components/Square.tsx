@@ -6,7 +6,7 @@ interface SquareProps {
 
 const Square: React.FC<SquareProps> = ({ value, onSquareClick, hightlightClass }) => {
     return (
-      <button className={`square ${hightlightClass}`} onClick={onSquareClick}>
+      <button className={`square ${hightlightClass} p-10 w-full flex justify-center items-center text-5xl font-sans font-bold h-8`} onClick={onSquareClick}>
         {value}
       </button>
     );
