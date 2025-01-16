@@ -11,6 +11,8 @@ function Game() {
     const currentSquares = history[currentMove];
     const xIsPlaying = currentMove % 2 !== 0;
 
+    console.log(xIsPlaying)
+
     function handlePlay(nextSquares: (string | null)[]): void{
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
         setHistory(nextHistory);
@@ -43,16 +45,19 @@ function Game() {
     });
 
     return (
-        <div className="flex flex-col justify-center items-center h-full px-10">
+        <div className="flex flex-col justify-center items-center h-full px-10 border border-teal-400">
+            <div className="mb-10 text-sm font-semibold text-slate-800 opacity-55 shadow px-4 py-1">
+                { xIsPlaying ? 'Your turn' : 'AI turn'}
+            </div>
             <Statistics />
             <div className="w-full mt-10 px-2">
                 <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
             </div>
 
             <div className="mt-10 flex rounded-full gap-1 items-center justify-center">
-                <span className="font-sans text-xl font-semibold text-[22px] leading-[0.2] bg-teal-600 text-white rounded-full w-7 h-7 flex justify-center items-center">X</span>
+                <span className={`${xIsPlaying ? 'bg-teal-600 text-white' : 'text-teal-600'} font-sans text-xl font-semibold text-[22px] leading-[0.2] rounded-full w-7 h-7 flex justify-center items-center`}>X</span>
 
-                <span className="font-sans text-2xl font-semibold leading-[0.2] text-sky-600 rounded-full w-8 h-8 flex justify-center items-center">O</span>
+                <span className={`${xIsPlaying ? 'text-sky-600' : 'bg-sky-600 text-white'} font-sans text-2xl font-semibold leading-[0.2] rounded-full w-8 h-8 flex justify-center items-center`}>O</span>
             </div>
 
             <div className="mt-10 flex justify-around gap-0 w-full items-center">
