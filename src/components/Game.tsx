@@ -21,9 +21,9 @@ function Game() {
     const moves = history.map((_, move) => {
         let description;
         if (move > 0) {
-          description = 'Go to move #' + move;
+            description = 'Go to move #' + move;
         } else {
-          description = 'Go to game start';
+            description = 'Go to game start';
         }
         return (
             <li key={move}>
@@ -39,16 +39,16 @@ function Game() {
         );
     });
 
-  return (
-    <div className="game">
-      <div className="game-board">
-        <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
-      </div>
-      <div className="game-info">
-        <ol>{moves}</ol>
-      </div>
-    </div>
-  );
+    return (
+        <div className="game">
+            <div className="game-board">
+                <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
+            </div>
+            <div className="game-info bg-red-200">
+                <ol>{moves}</ol>
+            </div>
+        </div>
+    );
 }
 
 export default Game;
