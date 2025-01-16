@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Board from "./Board";
 import Statistics from "./Statistics";
+import { SlRefresh } from "react-icons/sl";
+import { IoSettingsOutline } from "react-icons/io5";
 
 function Game() {
     const [history, setHistory] = useState<(string | null)[][]>(
@@ -43,8 +45,25 @@ function Game() {
     return (
         <div className="flex flex-col justify-center items-center h-full px-10">
             <Statistics />
-            <div className="w-full mt-5">
+            <div className="w-full mt-10 px-2">
                 <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
+            </div>
+
+            <div className="mt-10 flex rounded-full gap-1 items-center justify-center">
+                <span className="font-sans text-xl font-semibold text-[22px] leading-[0.2] bg-teal-600 text-white rounded-full w-7 h-7 flex justify-center items-center">X</span>
+
+                <span className="font-sans text-2xl font-semibold leading-[0.2] text-sky-600 rounded-full w-8 h-8 flex justify-center items-center">O</span>
+            </div>
+
+            <div className="mt-10 flex justify-around gap-0 w-full items-center">
+                <div className="rounded-full bg-slate-600 text-white w-7 h-7 text-xl flex justify-center items-center font-bold">
+                    <SlRefresh />
+                </div>
+                <div className="border border-slate-300 px-5 uppercase text-sm font-semibold text-slate-500 rounded-full">1 player</div>
+
+                <div className="rounded-full bg-slate-700 text-white w-7 h-7 text-xl flex justify-center items-center font-bold">
+                <IoSettingsOutline />
+                </div>
             </div>
 
 
