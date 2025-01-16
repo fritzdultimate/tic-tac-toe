@@ -222,12 +222,12 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         return null;
     }
 
-    let status: string;
+    // let status: string;
     const winnerObj = calculateWinner(squares);
     if (winnerObj) {
-        status = "Winner: " + winnerObj.winner;
+        // status = "Winner: " + winnerObj.winner;
     } else {
-        status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
+        // status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
     }
 
     const cells = Array(9).fill(null);
