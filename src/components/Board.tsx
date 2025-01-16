@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Square from "./Square";
 import Playground from "./Playground";
 
 interface BoardProps {
@@ -155,18 +154,6 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         return findMediumMove(board);
     }
 
-    function ultraHardAI(board: (string | null)[]): number {
-        let firstMove = firstMoveStrategy(board);
-        if(firstMove) {
-            return firstMove;
-        }
-        let forkBlock = blockForks(board, 'X');
-        if(forkBlock) {
-            return forkBlock;
-        }
-
-        return findBestMoveWithMinimax(board);
-    }
 
     function minimax(board: (string | null)[], depth: number, isMaximizing: boolean, alpha: number, beta: number): number {
         let winnerObj = calculateWinner(board);
@@ -209,72 +196,10 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         }
     }
 
-    function firstMoveStrategy(board: (string | null)[]) {
-        if(board[4] === null) {
-            return 4;
-        }
-
-        let corners = [0, 2, 6, 8];
-        for(let corner of shuffleArray(corners)) {
-            if(board[corner] === null) {
-                return corner;
-            }
-        }
-        return null;
-    }
-
     function isDraw(board: (string | null)[]) {
         return board.every(cell => cell !== null);
     }
 
-    function countWinnableLines(board: (string | null)[], player: string): number {
-        const winningLines = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-        let count = 0;
-
-        for(let line of winningLines) {
-            const [a, b, c] = line;
-            if((board[a] === player || board[a] === null) && (board[b] === player || board[b] === null) && (board[c] === player || board[c] === null)) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-    function blockForks(board: (string | null)[], opponent: string) {
-        let forkPositions = [];
-        for(let i = 0; i < board.length; i++) {
-            if(board[i] === null) {
-                board[i] = opponent;
-                if(countWinnableLines(board, opponent) >= 2) {
-                    forkPositions.push(i);
-                }
-                board[i] = null;
-            }
-        }
-        return forkPositions.length ? shuffleArray(forkPositions)[randomNumber(forkPositions.length, false)] : null;
-    }
-
-    function isSymmetric(board: (string | null)[]) {
-        let rotations = [
-            [board[0], board[1], board[2]],
-            [board[2], board[5], board[8]],
-            [board[8], board[7], board[6]],
-            [board[6], board[3], board[0]]
-
-        ];
-
-        return rotations.some(rotation => rotation.join("") === board.join(""));
-    }
 
     function calculateWinner(squares: (string | null)[]): {winner: string, positions: number[]} | null {
         const lines = [
@@ -298,11 +223,9 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
     }
 
     let status: string;
-    let winningPositions: number[];
     const winnerObj = calculateWinner(squares);
     if (winnerObj) {
         status = "Winner: " + winnerObj.winner;
-        winningPositions = winnerObj.positions;
     } else {
         status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
     }
