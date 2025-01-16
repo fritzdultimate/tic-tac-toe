@@ -61,12 +61,12 @@ function Game() {
             </div>
 
             <div className="mt-10 flex justify-around gap-0 w-full items-center">
-                <div className="rounded-full bg-slate-600 text-white w-7 h-7 text-xl flex justify-center items-center font-bold">
+                <div className="rounded-full bg-slate-600 text-white w-8 h-8 text-xl flex justify-center items-center font-bold shadow">
                     <SlRefresh />
                 </div>
                 <div className="border border-slate-300 px-5 uppercase text-sm font-semibold text-slate-500 rounded-full">1 player</div>
 
-                <div className="rounded-full bg-slate-700 text-white w-7 h-7 text-xl flex justify-center items-center font-bold">
+                <div className="rounded-full bg-slate-700 text-white w-8 h-8 text-xl flex justify-center items-center font-bold shadow">
                 <IoSettingsOutline />
                 </div>
             </div>
