@@ -9,9 +9,11 @@ interface PlaygroundProps {
 
 function Playground({ cells, squares, calculateWinner, handleClick }: PlaygroundProps) {
     let winningPositions: number[];
+    let winner: string;
     const winnerObj = calculateWinner(squares);
     if(winnerObj) {
         winningPositions = winnerObj.positions;
+        winner = winnerObj.winner;
     }
 
     const playground = 
@@ -30,7 +32,7 @@ function Playground({ cells, squares, calculateWinner, handleClick }: Playground
                         }
                         return (
                             <div className={`${borders()} flex justify-center items-center`} key={i}>
-                                <Square hightlightClass={winningPositions && winningPositions.includes(i) ? 'highlight-winning-box' : ''} onSquareClick={() => handleClick(i)} value={squares[i]} />
+                                <Square hightlightClass={winningPositions && winningPositions.includes(i) ? 'bg-sky-700 border border-sky-700 text-white' : ''} onSquareClick={() => handleClick(i)} value={squares[i]} />
 
                                 </div>
                         )
