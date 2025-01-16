@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Square from "./Square";
+import Playground from "./Playground";
 
 interface BoardProps {
     squares: (string | null)[];
@@ -275,16 +276,6 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         return rotations.some(rotation => rotation.join("") === board.join(""));
     }
 
-    let status: string;
-    let winningPositions: number[];
-    const winnerObj = calculateWinner(squares);
-    if (winnerObj) {
-        status = "Winner: " + winnerObj.winner;
-        winningPositions = winnerObj.positions;
-    } else {
-        status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
-    }
-
     function calculateWinner(squares: (string | null)[]): {winner: string, positions: number[]} | null {
         const lines = [
             [0, 1, 2],
@@ -306,26 +297,22 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
         return null;
     }
 
+    let status: string;
+    let winningPositions: number[];
+    const winnerObj = calculateWinner(squares);
+    if (winnerObj) {
+        status = "Winner: " + winnerObj.winner;
+        winningPositions = winnerObj.positions;
+    } else {
+        status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
+    }
+
     const cols = Array(3).fill(null);
     const rows = Array(3).fill(null);
-
-    const playground = cols.map((_, ci) => {
-        return (
-            <div className="board-row" key={ci}>
-                {
-                    rows.map((_, ri) => {
-                        const position = (rows.length * ci) + ri;
-                        return <Square hightlightClass={winningPositions && winningPositions.includes(position) ? 'highlight-winning-box' : ''} key={ri} onSquareClick={() => handleClick(position)} value={squares[position]} />
-                    })
-                }
-            </div>
-        )
-    })
-
     return (
         <>
             <p className="status">{status}</p>
-            {playground}
+            <Playground columns={cols} rows={rows} squares={squares} calculateWinner={calculateWinner} handleClick={handleClick} />
         </>
     );
 }
