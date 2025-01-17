@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Board from "./Board";
 import Statistics from "./Statistics";
 import { SlRefresh } from "react-icons/sl";
@@ -7,22 +7,18 @@ import { IoSettingsOutline } from "react-icons/io5";
 function Game() {
     const GAMELOCALSTORAGE = localStorage.getItem('tic-tac-toe');
     type STORAGETYPE = {
-        X: {wins: number};
-        O: {wins: number};
+        X: [];
+        O: [];
         next: '';
-        tie: '';
+        tie: [];
         settings: {}
     }
     if(!GAMELOCALSTORAGE) {
         let state: STORAGETYPE = {
-            X: {
-                wins: 0
-            },
-            'O': {
-                wins: 0
-            },
+            X: [],
+            O: [],
             next: '',
-            tie: '',
+            tie: [],
             settings: {}
         };
         localStorage.setItem('tic-tac-toe', JSON.stringify(state));
@@ -30,18 +26,63 @@ function Game() {
     const [history, setHistory] = useState<(string | null)[][]>(
     [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
+    const [scores, setScores] = useState<{X: number, O: number, tie: number}>({X: 0, O: 0, tie: 0});
     const currentSquares = history[currentMove];
     const xIsPlaying = currentMove % 2 !== 0;
 
-    function updateStorage(storage: string, key: string, data: (string | {})) {
-        const getStorage = localStorage.getItem(storage);
-        if(getStorage) {
-            let parseData = JSON.parse(getStorage);
+    useEffect(() => {
+        let storage = getStorage('tic-tac-toe', null);
+        if(storage) {
+            console.log(storage.O);
+        }
+        const winnerObj = calculateWinner(currentSquares);
+        if (winnerObj) {
+            let player = getStorageItem('tic-tac-toe', winnerObj.winner);
+            player.push(currentSquares);
+            updateStorage('tic-tac-toe', winnerObj.winner, player);
+
+        } else if(isDraw(currentSquares)) {
+            let tie = getStorageItem('tic-tac-toe', 'tie');
+            tie.push(currentSquares);
+            updateStorage('tic-tac-toe', 'tie', tie);
+            console.log(tie);
+        }
+    }, [history])
+
+    function updateStorage(storage: string, key: string, data: (string | {})): void {
+        const storageDataString = localStorage.getItem(storage);
+        if(storageDataString) {
+            let parseData = JSON.parse(storageDataString);
             parseData = {...parseData, [key]: data}
+
+            localStorage.setItem(storage, JSON.stringify(parseData));
         }
     }
 
-    console.log(updateStorage('tic-tac-toe', 'X', {}).X);
+    function getStorage(storage: string, key: (string | null)): {X: [], O: [], next: '', tie: [], settings: {}} {
+        const storageDataString = localStorage.getItem(storage);
+        if(storageDataString) {
+            let parseData = JSON.parse(storageDataString);
+            return key ? parseData[key] : parseData;
+        }
+        return {
+            X: [],
+            O: [],
+            next: '',
+            tie: [],
+            settings: {}
+        };
+    }
+
+    function getStorageItem(storage: string, key: string): (string | null)[][] {
+        const storageDataString = localStorage.getItem(storage);
+        if(storageDataString) {
+            let parseData = JSON.parse(storageDataString);
+            return parseData[key];
+        }
+
+        return []
+    }
 
     function handlePlay(nextSquares: (string | null)[]): void{
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -51,6 +92,31 @@ function Game() {
 
     function jumpTo(nextMove: number) {
         setCurrentMove(nextMove);
+    }
+
+    function isDraw(board: (string | null)[]) {
+        return board.every(cell => cell !== null);
+    }
+
+    function calculateWinner(squares: (string | null)[]): {winner: string, positions: number[]} | null {
+        const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if ( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] ) {
+                return {winner: squares[a], positions: [a, b, c]};
+            }
+        }
+        return null;
     }
 
     const moves = history.map((_, move) => {
@@ -79,9 +145,9 @@ function Game() {
             <div className="mb-10 text-sm font-semibold text-slate-800 opacity-55 shadow px-4 py-1">
                 { xIsPlaying ? 'Your turn' : 'AI turn'}
             </div>
-            <Statistics />
+            <Statistics scores={scores} />
             <div className="w-full mt-10 px-2">
-                <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} />
+                <Board xIsPlaying={xIsPlaying} squares={currentSquares} onPlay={handlePlay} isDraw={isDraw} calculateWinner={calculateWinner} />
             </div>
 
             <div className="mt-10 flex rounded-full gap-1 items-center justify-center">

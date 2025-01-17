@@ -5,9 +5,10 @@ interface BoardProps {
     squares: (string | null)[];
     onPlay: (data: (string | null)[]) => void;
     xIsPlaying: boolean;
+    isDraw: (board: (string | null)[]) => boolean;
+    calculateWinner: (squares: (string | null)[]) => {winner: string, positions: number[]} | null
 }
-function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
-
+function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardProps) {
     useEffect(() => {
         if(!xIsPlaying) {
             const nextSquares = [...squares];
@@ -194,40 +195,6 @@ function Board({ squares, onPlay, xIsPlaying }: BoardProps) {
             }
             return bestScore;
         }
-    }
-
-    function isDraw(board: (string | null)[]) {
-        return board.every(cell => cell !== null);
-    }
-
-
-    function calculateWinner(squares: (string | null)[]): {winner: string, positions: number[]} | null {
-        const lines = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-
-        for (let i = 0; i < lines.length; i++) {
-            const [a, b, c] = lines[i];
-            if ( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] ) {
-                return {winner: squares[a], positions: [a, b, c]};
-            }
-        }
-        return null;
-    }
-
-    // let status: string;
-    const winnerObj = calculateWinner(squares);
-    if (winnerObj) {
-        // status = "Winner: " + winnerObj.winner;
-    } else {
-        // status = `Next Player: ${xIsPlaying ? "X" : "O"}`;
     }
 
     const cells = Array(9).fill(null);

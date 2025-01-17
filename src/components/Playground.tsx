@@ -4,7 +4,7 @@ interface PlaygroundProps {
     cells: null[];
     squares: (string | null)[];
     calculateWinner: (data: (string | null)[]) => null | {winner: string; positions: number[]};
-    handleClick: (data: number) => void
+    handleClick: (data: number) => void,
 }
 
 function Playground({ cells, squares, calculateWinner, handleClick }: PlaygroundProps) {
