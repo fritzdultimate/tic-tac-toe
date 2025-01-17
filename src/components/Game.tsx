@@ -5,13 +5,43 @@ import { SlRefresh } from "react-icons/sl";
 import { IoSettingsOutline } from "react-icons/io5";
 
 function Game() {
+    const GAMELOCALSTORAGE = localStorage.getItem('tic-tac-toe');
+    type STORAGETYPE = {
+        X: {wins: number};
+        O: {wins: number};
+        next: '';
+        tie: '';
+        settings: {}
+    }
+    if(!GAMELOCALSTORAGE) {
+        let state: STORAGETYPE = {
+            X: {
+                wins: 0
+            },
+            'O': {
+                wins: 0
+            },
+            next: '',
+            tie: '',
+            settings: {}
+        };
+        localStorage.setItem('tic-tac-toe', JSON.stringify(state));
+    }
     const [history, setHistory] = useState<(string | null)[][]>(
     [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
     const currentSquares = history[currentMove];
     const xIsPlaying = currentMove % 2 !== 0;
 
-    console.log(xIsPlaying)
+    function updateStorage(storage: string, key: string, data: (string | {})) {
+        const getStorage = localStorage.getItem(storage);
+        if(getStorage) {
+            let parseData = JSON.parse(getStorage);
+            parseData = {...parseData, [key]: data}
+        }
+    }
+
+    console.log(updateStorage('tic-tac-toe', 'X', {}).X);
 
     function handlePlay(nextSquares: (string | null)[]): void{
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
