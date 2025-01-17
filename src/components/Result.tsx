@@ -2,7 +2,7 @@ import { GiWeightLiftingUp } from "react-icons/gi";
 
 interface ResultProps {
     name: string;
-    stat: string;
+    stat: number;
     className: string;
 }
 function Result({ name, stat, className }: ResultProps) {

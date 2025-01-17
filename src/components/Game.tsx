@@ -33,7 +33,12 @@ function Game() {
     useEffect(() => {
         let storage = getStorage('tic-tac-toe', null);
         if(storage) {
-            console.log(storage.O);
+            setScores({
+                X: storage.X.length,
+                O: storage.O.length,
+                tie: storage.tie.length
+            })
+            console.log(scores);
         }
         const winnerObj = calculateWinner(currentSquares);
         if (winnerObj) {
