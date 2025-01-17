@@ -34,6 +34,7 @@ function Game() {
         let storage = getStorage('tic-tac-toe', null);
         if(storage) {
             setScores({
+                ...scores,
                 X: storage.X.length,
                 O: storage.O.length,
                 tie: storage.tie.length
@@ -46,11 +47,20 @@ function Game() {
             player.push(currentSquares);
             updateStorage('tic-tac-toe', winnerObj.winner, player);
 
+            setScores({
+                ...scores,
+                [winnerObj.winner]: player.length
+            })
+
+
         } else if(isDraw(currentSquares)) {
             let tie = getStorageItem('tic-tac-toe', 'tie');
             tie.push(currentSquares);
             updateStorage('tic-tac-toe', 'tie', tie);
-            console.log(tie);
+            setScores({
+                ...scores,
+                tie: tie.length
+            })
         }
     }, [history])
 

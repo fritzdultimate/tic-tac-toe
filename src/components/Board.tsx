@@ -12,7 +12,9 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
     useEffect(() => {
         if(!xIsPlaying) {
             const nextSquares = [...squares];
-            let position = findBestMoveWithMinimax(nextSquares);
+            let position = findRandomMove(nextSquares);
+            let i = findBestMoveWithMinimax(nextSquares);
+            console.log(i);
             handleClick(position);
         }
     }, [xIsPlaying]);
