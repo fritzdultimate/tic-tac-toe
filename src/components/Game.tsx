@@ -183,7 +183,7 @@ function Game() {
             </div>
 
 
-            <div className="grid grid-cols-3 border-collapse mt-8 w-full px-12 hidden">
+            {/* <div className="grid grid-cols-3 border-collapse mt-8 w-full px-12 hidden">
                 <div className="border-r border-b border-r-red-500">cell 1</div>
                 <div className="border-r border-b">cell 2</div>
 
@@ -196,7 +196,7 @@ function Game() {
                 <div className="border-r">cell 8</div>
 
                 <div>cell 9</div>
-            </div>
+            </div> */}
             <div className="game-info hidden">
                 <ol>{moves}</ol>
             </div>
