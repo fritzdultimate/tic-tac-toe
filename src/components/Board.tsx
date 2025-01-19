@@ -138,6 +138,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
                 }
             }
         }
+        console.log(bestMove)
 
         if(bestMove !== null) {
             return bestMove
