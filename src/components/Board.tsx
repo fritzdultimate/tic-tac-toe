@@ -12,6 +12,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
     useEffect(() => {
         if(!xIsPlaying) {
             const nextSquares = [...squares];
+            console.log(findBestMoveWithMinimax(nextSquares))
             let position = findMediumMove(nextSquares);
             handleClick(position);
         }
@@ -59,9 +60,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
                     let secondWinningMove = findWinningMove(board, player)
                     board[winningMove] = null;
                     board[i]
-
                     if(secondWinningMove) {
-                        console.log(i);
                         return i;
                     }
                 }

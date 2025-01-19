@@ -27,6 +27,7 @@ function Game() {
     [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
     const [scores, setScores] = useState<{X: number, O: number, tie: number}>({X: 0, O: 0, tie: 0});
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const currentSquares = history[currentMove];
     const xIsPlaying = currentMove % 2 !== 0;
 
@@ -39,7 +40,6 @@ function Game() {
                 O: storage.O.length,
                 tie: storage.tie.length
             })
-            console.log(scores);
         }
         const winnerObj = calculateWinner(currentSquares);
         if (winnerObj) {
@@ -134,6 +134,17 @@ function Game() {
         return null;
     }
 
+    function refreshGameState() {
+        if(!isRefreshing) {
+            setIsRefreshing(true);
+            setTimeout(() => {
+                setCurrentMove(0);
+                setHistory([Array(9).fill(null)]);
+                setIsRefreshing(false);
+            }, 1000);
+        }
+    }
+
     const moves = history.map((_, move) => {
         let description;
         if (move > 0) {
@@ -172,8 +183,8 @@ function Game() {
             </div>
 
             <div className="mt-10 flex justify-around gap-0 w-full items-center">
-                <div className="rounded-full bg-slate-600 text-white w-8 h-8 text-xl flex justify-center items-center font-bold shadow">
-                    <SlRefresh />
+                <div className={`rounded-full text-white w-8 h-8 flex justify-center items-center font-bold shadow ${isRefreshing ? 'text-2xl bg-slate-600 cursor-not-allowed' : 'text-xl bg-slate-800 cursor-pointer'}` } onClick={refreshGameState}>
+                    <SlRefresh className={`${isRefreshing ? 'animate-spin' : ''}`} />
                 </div>
                 <div className="border border-slate-300 px-5 uppercase text-sm font-semibold text-slate-500 rounded-full">1 player</div>
 
