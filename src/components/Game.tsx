@@ -28,14 +28,15 @@ function Game() {
     const [currentMove, setCurrentMove] = useState(0);
     const [scores, setScores] = useState<{X: number, O: number, tie: number}>({X: 0, O: 0, tie: 0});
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [xIsPlaying, setXIsPlaying] = useState<boolean>(false);
     const currentSquares = history[currentMove];
     let storage = getStorage('tic-tac-toe', null);
     if(!storage.next) updateStorage('tic-tac-toe', 'next', 'X');
     const nextPlayer = storage.next === 'O' ? storage.next : 'X';
-    const xIsPlaying = nextPlayer === 'X';
+    // const xIsPlaying = nextPlayer === 'X';
 
     useEffect(() => {
+        setXIsPlaying(nextPlayer === 'X');
         let storage = getStorage('tic-tac-toe', null);
         if(storage) {
             setScores({
@@ -59,7 +60,7 @@ function Game() {
 
         } else if(isDraw(currentSquares)) {
             updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'X' : 'O');
-            setIsPlaying(false);
+            // setIsPlaying(false);
             let tie = getStorageItem('tic-tac-toe', 'tie');
             tie.push(currentSquares);
             updateStorage('tic-tac-toe', 'tie', tie);
