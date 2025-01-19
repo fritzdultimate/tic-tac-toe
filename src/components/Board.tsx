@@ -12,9 +12,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
     useEffect(() => {
         if(!xIsPlaying) {
             const nextSquares = [...squares];
-            let position = findRandomMove(nextSquares);
-            let i = findBestMoveWithMinimax(nextSquares);
-            console.log(i);
+            let position = findMediumMove(nextSquares);
             handleClick(position);
         }
     }, [xIsPlaying]);
@@ -28,41 +26,59 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
         nextSquares[i] = xIsPlaying ? "X" : 'O';
         onPlay(nextSquares);
     }
-    
-    function findMediumMove(board: (string | null)[]): number {
-        // try to win
-        let winningMove = findWinningMove(board, 'O');
-        if(winningMove !== null) {
-            return winningMove;
+
+    function shuffleArray(array: any[]) {
+        for(let i = array.length - 1; i > 0; i--) {
+            // pick a random index
+            const randomIndex = Math.floor(Math.random() * (i + 1));
+            // swap elements
+            [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
         }
 
-        // block opponent move
-        let blockingMove = findWinningMove(board, 'X');
-        if(blockingMove !== null) {
-            return blockingMove;
-        }
+        return array;
+    }
 
-        let strategies = ['center', 'corner', 'edge'];
+    function findRandomMove(board: (string | null)[]): number {
+        const firstMove = findFirstMove(board, 'easy');
+        if(firstMove) return firstMove;
 
-        if (shuffleArray(strategies)[randomNumber(strategies.length, false)] === 'center' && board[4] === null) {
-            // take center
-            if(board[4] === null) {
-                return 4;
+        const emptyCells = board.map((cell, i) => cell === null ? i : null);
+        const emptyCellsPositionsArray = emptyCells.filter(cell => cell != null);
+        const randomPosition = shuffleArray(emptyCellsPositionsArray)[0];
+        return randomPosition;
+    }
+
+
+    function findTrappingMove(board: (string | null)[], player: string): number | null {
+        for(let i = 0; i < board.length; i++) {
+            if(board[i] === null) {
+                board[i] = player;
+                let winningMove = findWinningMove(board, player);
+                if(winningMove) {
+                    board[winningMove] = player;
+                    let secondWinningMove = findWinningMove(board, player)
+                    board[winningMove] = null;
+                    board[i]
+
+                    if(secondWinningMove) {
+                        console.log(i);
+                        return i;
+                    }
+                }
+                board[i] = null;
             }
         }
+        return null;
+    }
 
-        if(emptyCells(board).length < 9 && board[4] === null) {
-            return 4;
-        }
+    function findMediumMove(board: (string | null)[]): number {
+        const firstMove = findFirstMove(board, 'medium');
+        if(firstMove) return firstMove;
         
-        if(shuffleArray(strategies)[randomNumber(strategies.length, false)] === 'corner') {
-            // Take a corner
-            let corners = [0, 2, 6, 8];
-            
-            for(let corner of shuffleArray(corners)) {
-                if(board[corner] === null) {
-                    return corner;
-                }
+        let corners = [0, 2, 6, 8, 4];
+        for(let corner of shuffleArray(corners)) {
+            if(board[corner] === null) {
+                return corner;
             }
         }
 
@@ -76,33 +92,6 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
 
         // fallback to random move
         return findRandomMove(board);
-    }
-
-
-    function emptyCells(board: (string | null)[]) {
-        return board.filter(cell => cell === null);
-    }
-
-    function shuffleArray(array: any[]) {
-        for(let i = array.length - 1; i > 0; i--) {
-            // pick a random index
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            // swap elements
-            [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
-        }
-
-        return array;
-    }
-
-    function randomNumber(length: number, include: boolean) {
-        return Math.abs(Math.round(Math.random() * length) - (include ? 0 : 1));
-    }
-
-    function findRandomMove(board: (string | null)[]): number {
-        const emptyCells = board.map((cell, i) => cell === null ? i : null);
-        const emptyCellsPositionsArray = emptyCells.filter(cell => cell !== null);
-        const randomPosition = randomNumber(emptyCellsPositionsArray.length, false);
-        return emptyCellsPositionsArray[randomPosition];
     }
 
     function findWinningMove(board: (string | null)[], player: string) {
@@ -197,6 +186,26 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
             }
             return bestScore;
         }
+    }
+
+    function findFirstMove(board: (string | null)[], difficulty: string) : number | null{
+        let winningMove = findWinningMove(board, 'O');
+        if(winningMove) {
+            return winningMove;
+        }
+        let blockWinningMove = findWinningMove(board, 'X');
+        if (blockWinningMove) {
+            return blockWinningMove;
+        }
+        if(difficulty != 'easy') {
+            const trapMove = findTrappingMove(board, 'O');
+            if(trapMove) return trapMove;
+
+            const blockTrapMove = findTrappingMove(board, 'X');
+            if(blockTrapMove) return blockTrapMove;
+        }
+
+        return null;
     }
 
     const cells = Array(9).fill(null);
