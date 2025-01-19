@@ -9,7 +9,7 @@ function Game() {
     type STORAGETYPE = {
         X: [];
         O: [];
-        next: '';
+        next: string;
         tie: [];
         settings: {}
     }
@@ -28,8 +28,12 @@ function Game() {
     const [currentMove, setCurrentMove] = useState(0);
     const [scores, setScores] = useState<{X: number, O: number, tie: number}>({X: 0, O: 0, tie: 0});
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const currentSquares = history[currentMove];
-    const xIsPlaying = currentMove % 2 !== 0;
+    let storage = getStorage('tic-tac-toe', null);
+    if(!storage.next) updateStorage('tic-tac-toe', 'next', 'X');
+    const nextPlayer = storage.next === 'O' ? storage.next : 'X';
+    const xIsPlaying = nextPlayer === 'X';
 
     useEffect(() => {
         let storage = getStorage('tic-tac-toe', null);
@@ -54,6 +58,8 @@ function Game() {
 
 
         } else if(isDraw(currentSquares)) {
+            updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'X' : 'O');
+            setIsPlaying(false);
             let tie = getStorageItem('tic-tac-toe', 'tie');
             tie.push(currentSquares);
             updateStorage('tic-tac-toe', 'tie', tie);
@@ -74,7 +80,7 @@ function Game() {
         }
     }
 
-    function getStorage(storage: string, key: (string | null)): {X: [], O: [], next: '', tie: [], settings: {}} {
+    function getStorage(storage: string, key: (string | null)): {X: [], O: [], next: string, tie: [], settings: {}} {
         const storageDataString = localStorage.getItem(storage);
         if(storageDataString) {
             let parseData = JSON.parse(storageDataString);
@@ -103,6 +109,7 @@ function Game() {
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
+        updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
     }
 
     function jumpTo(nextMove: number) {
@@ -128,6 +135,8 @@ function Game() {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if ( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] ) {
+                // updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
+                // setIsPlaying(false);
                 return {winner: squares[a], positions: [a, b, c]};
             }
         }
