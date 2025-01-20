@@ -217,7 +217,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
     return (
         <>
             <div className="w-full">
-                <Playground cells={cells} squares={squares} calculateWinner={calculateWinner} handleClick={handleClick} />
+                <Playground cells={cells} squares={squares} calculateWinner={calculateWinner} handleClick={xIsPlaying ? handleClick : () => {}} />
             </div>
         </>
     );

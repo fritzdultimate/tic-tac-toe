@@ -33,6 +33,8 @@ function Game() {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     let isPlaying = false
     const currentSquares = history[currentMove];
+    
+    const [status, setStatus] = useState<string>(xIsPlaying ? 'Your turn' : 'AI turn');
 
     useEffect(() => {
         let storage = getStorage('tic-tac-toe', null);
@@ -47,7 +49,7 @@ function Game() {
         const winnerObj = calculateWinner(currentSquares);
         if (winnerObj) {
             isPlaying = false;
-            // updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
+            setStatus(`${winnerObj.winner} won`);
             let player = getStorageItem('tic-tac-toe', winnerObj.winner);
             player.push(currentSquares);
             updateStorage('tic-tac-toe', winnerObj.winner, player);
@@ -60,6 +62,7 @@ function Game() {
 
         } else if(isDraw(currentSquares)) {
             isPlaying = false;
+            setStatus('It is a tie');
             let tie = getStorageItem('tic-tac-toe', 'tie');
             tie.push(currentSquares);
             updateStorage('tic-tac-toe', 'tie', tie);
@@ -116,6 +119,7 @@ function Game() {
         setCurrentMove(nextHistory.length - 1);
         if(isPlaying) {
             setXIsPlaying(!xIsPlaying);
+            setStatus(xIsPlaying ?  'AI turn' : 'Your turn');
         }
     }
 
@@ -158,6 +162,7 @@ function Game() {
 
                 let storage = getStorage('tic-tac-toe', null);
                 setXIsPlaying(storage.next == 'X' ? true : false)
+                setStatus(xIsPlaying ?  'Your turn' : 'AI turn');
                 isPlaying = false;
             }, 1000);
         }
@@ -187,7 +192,7 @@ function Game() {
     return (
         <div className="flex flex-col justify-center items-center h-full px-10 border border-teal-300 border-opacity-55">
             <div className="mb-10 text-sm font-semibold text-slate-800 opacity-55 shadow px-4 py-1">
-                { xIsPlaying ? 'Your turn' : 'AI turn'}
+                { status }
             </div>
             <Statistics scores={scores} />
             <div className="w-full mt-10 px-2">
