@@ -33,7 +33,6 @@ function Game() {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     let isPlaying = false
     const currentSquares = history[currentMove];
-    let i = 0;
 
     useEffect(() => {
         let storage = getStorage('tic-tac-toe', null);
@@ -68,13 +67,9 @@ function Game() {
                 ...scores,
                 tie: tie.length
             })
-            let storage = getStorage('tic-tac-toe', null);
-            updateStorage('tic-tac-toe', 'next', storage.next === 'X' ? 'O' : 'X');
         }
-        if(winnerObj) {
-            i = i + 1;
+        if(isDraw(currentSquares) || winnerObj) {
             let storage = getStorage('tic-tac-toe', null);
-            console.log('this is when you need to update state', storage.next);
             updateStorage('tic-tac-toe', 'next', storage.next === 'X' ? 'O' : 'X');
         }
     }, [history])
@@ -120,7 +115,6 @@ function Game() {
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
         if(isPlaying) {
-            console.log('is playing')
             setXIsPlaying(!xIsPlaying);
         }
     }
