@@ -23,20 +23,19 @@ function Game() {
         };
         localStorage.setItem('tic-tac-toe', JSON.stringify(state));
     }
+    let storage = getStorage('tic-tac-toe', null);
+    const [xIsPlaying, setXIsPlaying] = useState<boolean>(storage.next == 'X' ? true : false);
+
     const [history, setHistory] = useState<(string | null)[][]>(
     [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
     const [scores, setScores] = useState<{X: number, O: number, tie: number}>({X: 0, O: 0, tie: 0});
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const [xIsPlaying, setXIsPlaying] = useState<boolean>(false);
+    let isPlaying = false
     const currentSquares = history[currentMove];
-    let storage = getStorage('tic-tac-toe', null);
-    if(!storage.next) updateStorage('tic-tac-toe', 'next', 'X');
-    const nextPlayer = storage.next === 'O' ? storage.next : 'X';
-    // const xIsPlaying = nextPlayer === 'X';
+    let i = 0;
 
     useEffect(() => {
-        setXIsPlaying(nextPlayer === 'X');
         let storage = getStorage('tic-tac-toe', null);
         if(storage) {
             setScores({
@@ -48,6 +47,8 @@ function Game() {
         }
         const winnerObj = calculateWinner(currentSquares);
         if (winnerObj) {
+            isPlaying = false;
+            // updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
             let player = getStorageItem('tic-tac-toe', winnerObj.winner);
             player.push(currentSquares);
             updateStorage('tic-tac-toe', winnerObj.winner, player);
@@ -59,8 +60,7 @@ function Game() {
 
 
         } else if(isDraw(currentSquares)) {
-            updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
-            // setIsPlaying(false);
+            isPlaying = false;
             let tie = getStorageItem('tic-tac-toe', 'tie');
             tie.push(currentSquares);
             updateStorage('tic-tac-toe', 'tie', tie);
@@ -68,6 +68,14 @@ function Game() {
                 ...scores,
                 tie: tie.length
             })
+            let storage = getStorage('tic-tac-toe', null);
+            updateStorage('tic-tac-toe', 'next', storage.next === 'X' ? 'O' : 'X');
+        }
+        if(winnerObj) {
+            i = i + 1;
+            let storage = getStorage('tic-tac-toe', null);
+            console.log('this is when you need to update state', storage.next);
+            updateStorage('tic-tac-toe', 'next', storage.next === 'X' ? 'O' : 'X');
         }
     }, [history])
 
@@ -107,17 +115,21 @@ function Game() {
     }
 
     function handlePlay(nextSquares: (string | null)[]): void{
+        isPlaying = true;
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
-        updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
+        if(isPlaying) {
+            console.log('is playing')
+            setXIsPlaying(!xIsPlaying);
+        }
     }
 
     function jumpTo(nextMove: number) {
         setCurrentMove(nextMove);
     }
 
-    function isDraw(board: (string | null)[]) {
+    function isDraw(board: (string | null)[]): boolean {
         return board.every(cell => cell !== null);
     }
 
@@ -136,8 +148,6 @@ function Game() {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if ( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] ) {
-                updateStorage('tic-tac-toe', 'next', xIsPlaying ? 'O' : 'X');
-                // setIsPlaying(false);
                 return {winner: squares[a], positions: [a, b, c]};
             }
         }
