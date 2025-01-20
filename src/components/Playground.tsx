@@ -30,7 +30,7 @@ function Playground({ cells, squares, calculateWinner, handleClick }: Playground
                         }
 
                         return (
-                            <div className={`${borders()} border-slate-300 flex justify-center items-center`} key={i}>
+                            <div className={`${borders()} border-slate-300 flex justify-center items-center hover:bg-teal-100 hover:opacity-75`} key={i}>
                                 <Square hightlightClass={winningPositions && winningPositions.includes(i) ? 'bg-sky-700 border border-sky-700 text-white' : ''} onSquareClick={() => handleClick(i)} value={squares[i]} />
 
                             </div>
