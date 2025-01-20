@@ -20,7 +20,7 @@ function Board({ squares, onPlay, xIsPlaying, isDraw, calculateWinner }: BoardPr
                     let position = findMediumMove(nextSquares);
                     handleClick(position);
                 }
-            }, 500)
+            }, 857)
         }
     }, [xIsPlaying]);
 

@@ -155,6 +155,10 @@ function Game() {
                 setCurrentMove(0);
                 setHistory([Array(9).fill(null)]);
                 setIsRefreshing(false);
+
+                let storage = getStorage('tic-tac-toe', null);
+                setXIsPlaying(storage.next == 'X' ? true : false)
+                isPlaying = false;
             }, 1000);
         }
     }
