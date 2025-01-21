@@ -1,8 +1,13 @@
-import Game from "./components/Game";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Settings from "./pages/Settings";
 
 function App() {
     return <>
-        <Game />
+        <Routes>
+            <Route path="/" element={<Home />}  />
+            <Route path="/settings" element={<Settings />} />
+        </Routes>
     </>
 }
 

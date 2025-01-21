@@ -1,5 +1,7 @@
+import Game from "../components/Game"
+
 const Home = () => {
-    return <h1>home page</h1>
+    return <Game />
 }
 
 export default Home;
